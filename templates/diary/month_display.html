@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title%}
+  我的日记
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <legend class="legent_title">
+      我的项目
+    </legend>
+	  {% for c in covers %}
+	    <a href="{% url diary_views_mydiary uid forloop.counter %}"><img src="{{ c }}" style="width:180px; height:220px;" class="month"></img></a>
+	  {% endfor %}
+</div>
+{% endblock %}
+
+
+
+

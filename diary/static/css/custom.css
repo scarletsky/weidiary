@@ -1,0 +1,44 @@
+<style type="text/css">
+    ul li{ list-style-type: none; }
+    #DiaryList tr{ 
+      height: 40px; 
+    }
+    #MonthList tr{
+      height: 40px;
+    }
+    .errors{
+      color: #E03232;
+    }
+    .main{
+      min-height: 400px;
+    }
+    .marketing{
+      margin-bottom: 12px; 
+    }
+    .footer .nav-footer { 
+      list-style: none; 
+      padding: 0px; 
+      margin: 0px 0px 9px; 
+    }
+    .footer .nav-footer > li { 
+      float: left; 
+      display: block; 
+      padding: 0px 16px 0px 0px; 
+      margin: 0px; 
+    }
+    .footer .nav-footer > li > a { 
+      padding: 0px; 
+    }
+    .footer .nav-footer > li > a:hover { 
+      text-decoration: none; 
+      background-color: #ffffff; 
+    }
+    .footer .nav-footer:after { 
+      clear: both; 
+      display: table; 
+      content: ""; 
+    }
+    .footer p { 
+      margin-bottom: 0px; 
+    }
+</style>

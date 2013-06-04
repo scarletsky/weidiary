@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}账户激活成功！{% endblock %}
+
+{% block main %}
+
+<!--{% if account %}-->
+    <legend class="legent_title"> 激活成功 </legend>
+    <div class="alert alert-success">
+      <p>感谢您的注册！ 现在你可以<a href="/accounts/login/">登录</a>了！</p>
+    </div>
+<!--
+  {% else %}
+    <legend class="legent_title"> 激活失败 </legend>
+    <div class="alert alert-error">
+       <p>非常抱歉，激活不成功。可能是你的激活链接不正确，或者激活码过期。自从您注册之后，激活码有效期只有{{ expiration_days|apnumber }}天。</p>
+    </div>
+  {% endif %}
+-->
+{% endblock %}

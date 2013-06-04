@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}用户注册{% endblock %}
+
+{% block main %}
+
+
+  <legend class="legent_title">注册</legend>
+<!--
+  {% if form.errors %}
+    <h4 class="errors">请修改以下字段</h4>
+  {% endif %}
+-->
+  <form method="post" action="" class="form-horizontal" onsubmit="return check_service()">
+    <fieldset>
+	{% csrf_token %}
+    <div class="control-group">
+      <label class="control-label" for="id_username">用户名:</label>
+      <div class="controls">
+        {{ form.username }}
+        <span class="help-inline"></span>
+        <div class="help-block">
+          {% if form.username.errors %}
+          <ul class="errors"><li>{{ form.username.errors.as_text }}</li></ul>
+          {% endif %}                  
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="id_email">邮箱地址:</label>
+      <div class="controls">
+        {{ form.email }}
+        <span class="help-inline"></span>
+        <div class="help-block">
+          {% if form.email.errors %}
+          <ul class="errors"><li>{{ form.email.errors.as_text }}</li></ul>
+          {% endif %}              
+        </div>
+      </div>
+    </div>
+
+
+    <div class="control-group">
+      <label class="control-label" for="id_password1">密码:</label>
+      <div class="controls">
+        {{ form.password1 }}
+        <span class="help-inline"></span>
+        <div class="help-block">
+          {% if form.password1.errors %}
+          <ul class="errors"><li>{{ form.password1.errors.as_text }}</li></ul>
+          {% endif %}          
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="id_password2">密码(再次确认):</label>
+      <div class="controls">
+        {{ form.password2 }}
+        <span class="help-inline"></span>
+        <div class="help-block">
+          {% if form.password2.errors %}
+          <ul class="errors"><li>{{ form.password2.errors.as_text }}</li></ul>
+          {% endif %}           
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls checkbox">
+        <label>
+          <input id="service" type="checkbox" checked="checked">
+          <a target="_blank" href="/service/">我已阅读并同意该服务条款</a>
+        </label>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+	      <button class="btn btn-primary" type="submit">注册</button>
+      </div>
+    </div>
+    </fieldset>
+  </form>
+  
+
+<script>
+  function check_service(){
+    if ($('#service:checked').length == 0)
+    {
+      alert('您必须同意注册条款')
+      return false;
+    }
+    return true;
+  }
+</script>
+{% endblock %}
+
+

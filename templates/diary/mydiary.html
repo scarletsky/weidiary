@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}
+  我的日记
+{% endblock %}
+
+
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="/static/datepicker/css/datepicker.css">
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="/static/datepicker/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+
+            $("#EditForm").on('show', function(){
+                document.getElementById('id_date').value = "";
+                document.getElementById('id_content').value = "";
+                $(".save").unbind('click').click(function(){
+                    var date_data = document.getElementById('id_date').value;
+                    var content_data = document.getElementById('id_content').value;
+                    var post_data = {'date':date_data, 'content':content_data, 'flag':'new'};
+                    $.post('{% url diary_views_mydiary uid month %}', post_data, function(ret){
+                        if(ret==1)
+                        {
+                            $("#EditForm").modal('hide');
+                            location=location;
+                        }
+                        else if(ret==2)
+                        {
+                            alert('网络错误，请重试!');
+                        }
+                        else
+                        {
+                            alert("请不要提交空白内容！")
+                        }
+                    });
+                });
+                $(".cancel").unbind('click').click(function(){
+                    $("#EditForm").modal('hide');
+                });
+            });
+
+            $("#Cover").on('show', function(){
+                $(".save").unbind('click').click(function(){
+                    var imgurl = document.getElementById('id_cover').value;
+                    post_data = {'imgurl':imgurl, 'flag':'cover'}
+                    $.post('{% url diary_views_mydiary uid month %}', post_data, function(ret){
+                        if(ret==1)
+                        {
+                            alert("封面保存成功！");
+                            $("#Cover").modal('hide');
+                        }
+                        else
+                        {
+                            alert("网络错误，请重试！");
+                        }
+                    });
+                });
+
+                $(".cancel").unbind('click').click(function(){
+                    $("#Cover").modal('hide');
+                });
+            });
+
+            $(".edit").click(function(){
+                var index = $(this).parent().parent().attr('id');
+                var date_data = $(this).parent().parent().children("td:eq(1)").html();
+                var content_data = $(this).parent().parent().children("td:eq(2)").html();
+                $("#EditForm").on('show', function(){
+                    document.getElementById('id_date').value = date_data;
+                    document.getElementById('id_content').value = content_data;
+                    $(".save").unbind('click').click(function(){
+                        var new_date_data = document.getElementById('id_date').value;
+                        var new_content_data = document.getElementById('id_content').value;
+                        var post_data = {'old_date':date_data, 'old_content':content_data, 
+                                    'new_date':new_date_data, 'new_content':new_content_data, 
+                                    'flag':'edit'};
+                        $.post('{% url diary_views_mydiary uid month %}', post_data, function(ret){
+                            if(ret == 1)
+                            {
+                                select_row = document.getElementById(index);
+                                select_row.cells[1].innerHTML = new_date_data;
+                                select_row.cells[2].innerHTML = new_content_data;
+                            }
+                            else
+                            {
+                                alert('网络错误，请重试');
+                            }
+                        });
+                        $("#EditForm").modal('hide');
+                    });
+                    $(".cancel").unbind('click').click(function(){
+                        $("#EditForm").modal('hide');
+                    });
+                });
+            });
+
+            $(".delete").click(function(){
+                var date_data = $(this).parent().parent().children("td:eq(1)").html();
+                var content_data = $(this).parent().parent().children("td:eq(2)").html();
+                var post_data =  {"date":date_data, 'content':content_data, 'flag':'delete'};
+                var choice = confirm("你真的想要删除吗？");
+                if(choice==true)
+                {
+                    $.post('{% url diary_views_mydiary uid month %}', post_data);
+                    $(this).parent().parent().remove();
+                }
+            });
+        });
+    </script>
+{% endblock%}
+
+
+{% block main %}
+<!-- EditForm -->
+<div class="modal hide fade" id="EditForm">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>我的日记</h3>
+  </div>
+  <div class="modal-body">
+    <form action="" method="POST" class="form-horizontal">
+      <fieldset>
+        {% csrf_token %}
+
+        <div class="control-group">
+          <label class="control-label" for="id_date">日期</label>
+          <div class="controls">
+            <input id="id_date" type="text" name="date" maxlength="50" class="required datepicker" />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="id_content">内容</label>
+          <div class="controls">
+            <textarea id="id_content" name="content" class="input-xlarge required"></textarea>
+          </div>
+        </div>
+
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button class="cancel btn">取消</button>
+    <button class="save btn btn-primary">保存</button>
+  </div>
+</div>
+<!-- EditForm -->
+
+
+<!-- Cover -->
+<div class="modal hide fade" id="Cover">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>封面</h3>
+  </div>
+  <div class="modal-body">
+    <form action="" method="POST" class="form-horizontal">
+      <fieldset>
+        {% csrf_token %}
+        <div class="control-group">
+          <label class="control-label" for="id_cover">封面地址</label>
+          <div class="controls">
+            <input id="id_cover" type="text" name="cover" class="required" />
+            <p class="help-block">格式:http://xxx.jpg, 大小限制:180x220</p>
+          </div>
+        </div>
+
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button class="cancel btn">取消</button>
+    <button class="save btn btn-primary">保存</button>
+  </div>
+</div>
+<!-- Cover -->
+
+
+<!-- Main -->
+<div>
+    <legend class="legent_title">
+        我的日记
+        <button class="btn btn-success" style="float:right;" data-toggle="modal" data-target="#EditForm"><span class="icon-plus icon-white"></span>写日记</button>
+        <button class="btn btn-success" style="float:right;margin-right:20px;" data-toggle="modal" data-target="#Cover"><span class="icon-book icon-white"></span>修改封面</button>
+    </legend>
+    {% if select_month_diary %}
+    <table id="DiaryList" class="table table-striped table-bordered table-condensed" name="diary_table">
+        <thead>
+            <tr>
+                <th style="width: 100px; text-align:center;"><h3>操作</h3></th>
+                <th style="width: 250px; text-align:center;"><h3>日期</h3></th>
+                <th style="width: 800px; text-align:center;"><h3>微日记</h3></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for d in select_month_diary %}
+            <tr id="row{{ forloop.counter }}">
+                <td style="text-align:center;">
+                    <a href="javascript:void(0)" class="edit btn" data-toggle="modal" data-target="#EditForm"><span class="icon-edit"></span></a>
+                    <a href="javascript:void(0)" class="delete btn"><span class="icon-remove"></span></a>
+                </td>
+                <td style="text-align:center;">{{ d.date|date:"c" }}</td>
+                <td style="text-align:left;">{{ d.content }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+      <p>你还没有这个月的日记哦！</p>
+      <p>如果想要写日记的话请按右上角的按钮哦！</p>
+    {% endif %}
+</div>
+<!-- Main -->
+
+{% endblock %}

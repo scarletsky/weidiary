@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}意见反馈{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript">
+      $(function(){
+        $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
+      });
+    </script>
+{% endblock %}
+
+
+{% block main %}
+<legend class="legent_title"> 意见反馈 </legend>
+{% if success %}
+    <p>非常感谢你的意见！</p>
+{% else %}
+<form method="post" action="" class="form-horizontal" id="feed_form">
+  <fieldset>
+    {% csrf_token %}
+    <div class="control-group">
+      <label class="control-label" for="id_f_title">标题</label>
+      <div class="controls">
+        <input id="id_f_title" type="text" name="f_title" maxlength="50" required />
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="id_username">内容</label>
+      <div class="controls">
+        <textarea id="id_f_content" rows="8" cols="40" name="f_content" class="span4" required></textarea>
+      </div>
+    </div>
+
+   <div class="control-group">
+      <div class="controls">
+        <button type="submit" class="btn btn-primary">提交反馈</button>
+      </div>
+    </div>
+
+    <input type="hidden" name="next" value=""/>
+
+  </fieldset>
+</form>
+{% endif %}
+{% endblock %}
